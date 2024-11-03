@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>Data Divisi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-1/5 bg-white h-screen shadow-lg">
+      <div class="p-4 flex items-center">
+        <img alt="University Logo" class="w-10 h-10 mr-2" height="50" src="pengalaman.png" width="50"/>
+        <div>
+          <h1 class="text-lg font-bold">PT. MANDIRI DIGITAL</h1>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex items-center mb-4">
+          <img alt="User Profile Picture" class="w-10 h-10 rounded-full mr-2" height="50" src="poto fazzil.jfif" width="50"/>
+          <div>
+            <p class="font-semibold">Fazzil Alfis Ramadhan</p>
+            <p class="text-sm text-gray-600">Administrator</p>
+          </div>
+        </div>
+        <ul class="space-y-2">
+          <li class="flex items-center p-2 hover:bg-gray-200 rounded">
+            <i class="fas fa-tachometer-alt mr-2"></i>
+            <span>Divisi</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="w-4/5 p-6">
+      <div class="bg-white p-4 rounded shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Data Divisi</h2>
+          <button id="openModalBtn" class="bg-blue-500 text-white px-4 py-2 rounded">+ Tambah Divisi</button>
+        </div>
+        
+        <!-- Tabel Data Divisi -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 border-b">No</th>
+                <th class="py-2 px-4 border-b">Kode Divisi</th>
+                <th class="py-2 px-4 border-b">Nama Divisi</th>
+                <th class="py-2 px-4 border-b">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="divisionTableBody">
+              <!-- Data akan ditambahkan di sini -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Tambah/Edit Divisi -->
+  <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-lg w-96">
+      <h2 id="modalTitle" class="text-xl font-semibold mb-4">Tambah Divisi</h2>
+      <form id="divisionForm">
+        <div class="mb-4">
+          <label class="block text-gray-700">Kode Divisi</label>
+          <input type="text" id="kodeDivisi" class="w-full border px-3 py-2 rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Nama Divisi</label>
+          <input type="text" id="namaDivisi" class="w-full border px-3 py-2 rounded" required>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" id="closeModalBtn" class="text-gray-500 mr-4">Batal</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let divisionCount = 0;
+    let isEditing = false;
+    let currentRow = null;
+
+    // Menampilkan dan menyembunyikan modal
+    document.getElementById('openModalBtn').addEventListener('click', () => {
+      openModal();
+    });
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      closeModal();
+    });
+
+    // Fungsi membuka modal dan mengatur judul
+    function openModal(edit = false, row = null) {
+      document.getElementById('modalTitle').innerText = edit ? 'Edit Divisi' : 'Tambah Divisi';
+      document.getElementById('modal').classList.remove('hidden');
+      isEditing = edit;
+      currentRow = row;
+      if (edit && row) {
+        document.getElementById('kodeDivisi').value = row.cells[1].innerText;
+        document.getElementById('namaDivisi').value = row.cells[2].innerText;
+      } else {
+        document.getElementById('divisionForm').reset();
+      }
+    }
+
+    // Fungsi menutup modal
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+      document.getElementById('divisionForm').reset();
+    }
+
+    // Fungsi menambahkan atau mengedit data divisi
+    document.getElementById('divisionForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      // Mengambil nilai dari form
+      const kodeDivisi = document.getElementById('kodeDivisi').value;
+      const namaDivisi = document.getElementById('namaDivisi').value;
+
+      if (isEditing && currentRow) {
+        // Edit data yang ada
+        currentRow.cells[1].innerText = kodeDivisi;
+        currentRow.cells[2].innerText = namaDivisi;
+      } else {
+        // Menambah data baru
+        const tableBody = document.getElementById('divisionTableBody');
+        const newRow = document.createElement('tr');
+        divisionCount++;
+        newRow.innerHTML = `
+          <td class="py-2 px-4 border-b">${divisionCount}</td>
+          <td class="py-2 px-4 border-b">${kodeDivisi}</td>
+          <td class="py-2 px-4 border-b">${namaDivisi}</td>
+          <td class="py-2 px-4 border-b">
+            <button class="text-blue-500 editBtn"><i class="fas fa-edit"></i></button>
+            <button class="text-red-500 ml-2 deleteBtn"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+
+        // Menambahkan event listener ke tombol edit dan delete baru
+        newRow.querySelector('.editBtn').addEventListener('click', () => editRow(newRow));
+        newRow.querySelector('.deleteBtn').addEventListener('click', () => deleteRow(newRow));
+      }
+
+      // Reset form dan sembunyikan modal
+      closeModal();
+    });
+
+    // Fungsi mengedit baris
+    function editRow(row) {
+      openModal(true, row);
+    }
+
+    // Fungsi menghapus baris
+    function deleteRow(row) {
+      row.remove();
+      divisionCount--;
+      updateRowNumbers();
+    }
+
+    // Fungsi untuk memperbarui nomor baris setelah menghapus
+    function updateRowNumbers() {
+      const rows = document.querySelectorAll('#divisionTableBody tr');
+      rows.forEach((row, index) => {
+        row.cells[0].innerText = index + 1;
+      });
+    }
+  </script>
+</body>
+</html>

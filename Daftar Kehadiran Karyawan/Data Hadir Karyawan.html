@@ -1,0 +1,146 @@
+<html>
+<head>
+    <title>Daftar Hadir Karyawan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        /* Modal Style */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-1/5 bg-white h-screen shadow-md">
+            <div class="p-4">
+                <img alt="Universitas Bung Karno Logo" class="mb-4" height="50" src="poto fazzil.jfif" width="150"/>
+                <p class="text-gray-600">Fazzil Alfis Ramadhan</p>
+                <p class="text-gray-400">Administrator</p>
+            </div>
+            <nav class="mt-10">
+                <ul>
+                    <li class="mb-2">
+                        <a class="flex items-center text-gray-600 hover:text-blue-500" href="#">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Absensi
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main Content -->
+        <div class="w-4/5 p-6">
+            <div class="bg-white p-6 rounded shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Daftar Hadir Karyawan</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <label class="mr-2" for="show">Show</label>
+                        <select class="border rounded p-1" id="show">
+                            <option>6</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                        <span class="ml-2">entries</span>
+                    </div>
+                    <div>
+                        <label class="mr-2" for="search">Search:</label>
+                        <input class="border rounded p-1" id="search" type="text"/>
+                    </div>
+                </div>
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b">#</th>
+                            <th class="py-2 px-4 border-b">Nama Karyawan</th>
+                            <th class="py-2 px-4 border-b">Tanggal</th>
+                            <th class="py-2 px-4 border-b">Lokasi Absen</th>
+                            <th class="py-2 px-4 border-b">Jam Masuk</th>
+                            <th class="py-2 px-4 border-b">Jam Keluar</th>
+                            <th class="py-2 px-4 border-b">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Rows -->
+                        <tr>
+                            <td class="py-2 px-4 border-b">1</td>
+                            <td class="py-2 px-4 border-b">rusli</td>
+                            <td class="py-2 px-4 border-b">01/11/2024</td>
+                            <td class="py-2 px-4 border-b">office</td>
+                            <td class="py-2 px-4 border-b">7:21:14</td>
+                            <td class="py-2 px-4 border-b">17:09:22</td>
+                            <td class="py-2 px-4 border-b text-center">
+                                <button class="text-blue-500 hover:text-blue-700 mr-2" onclick="openStatusModal('rusli')">Ubah Status</button>
+                                <i class="fas fa-eye text-blue-500"></i>
+                            </td>
+                        </tr>
+                        <!-- Additional rows here... -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Status Change -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <span id="closeStatusModal" class="float-right cursor-pointer">&times;</span>
+            <h2 class="text-lg font-bold mb-4">Ubah Status Kehadiran</h2>
+            <p id="statusMessage"></p>
+            <button id="confirmStatusChange" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Konfirmasi</button>
+        </div>
+    </div>
+
+    <script>
+        // Modal Elements
+        const statusModal = document.getElementById("statusModal");
+        const closeStatusModal = document.getElementById("closeStatusModal");
+        const statusMessage = document.getElementById("statusMessage");
+        let currentEmployee;
+
+        // Function to open status change modal
+        function openStatusModal(employeeName) {
+            currentEmployee = employeeName;
+            statusMessage.innerText = `Apakah Anda yakin ingin mengubah status kehadiran ${employeeName}?`;
+            statusModal.style.display = "block";
+        }
+
+        // Close modal
+        closeStatusModal.onclick = function () {
+            statusModal.style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            if (event.target == statusModal) {
+                statusModal.style.display = "none";
+            }
+        }
+
+        // Confirm status change
+        document.getElementById("confirmStatusChange").onclick = function () {
+            alert(`Status kehadiran ${currentEmployee} telah diubah.`);
+            statusModal.style.display = "none";
+        }
+    </script>
+</body>
+</html>

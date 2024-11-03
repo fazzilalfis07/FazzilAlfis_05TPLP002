@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Daftar Lembur Karyawan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-1/5 bg-white h-screen shadow-lg">
+      <div class="p-4 flex items-center">
+        <img alt="University Logo" class="w-10 h-10 mr-2" height="50" src="pengalaman.png" width="50"/>
+        <div>
+          <h1 class="text-blue-700 font-bold">PT. MANDIRI DIGITAL</h1>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="flex items-center mb-4">
+          <img alt="User Avatar" class="w-10 h-10 rounded-full mr-2" height="40" src="poto fazzil.jfif" width="40"/>
+          <div>
+            <p class="text-gray-700">Fazzil Alfis Ramadhan</p>
+            <p class="text-gray-500 text-sm">Administrator</p>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li class="mb-2">
+              <a href="#" class="text-gray-700 font-bold">Lembur</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="w-4/5 p-6">
+      <div class="bg-white p-4 rounded shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Daftar Lembur Karyawan</h2>
+          <button id="changeStatusBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Ubah Status</button>
+        </div>
+
+        <!-- Tabel Data Lembur -->
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b">No</th>
+              <th class="py-2 px-4 border-b">Nama</th>
+              <th class="py-2 px-4 border-b">Tanggal</th>
+              <th class="py-2 px-4 border-b">Jam Lembur Mulai | Berakhir</th>
+              <th class="py-2 px-4 border-b">Keperluan Lembur</th>
+              <th class="py-2 px-4 border-b">Status</th>
+            </tr>
+          </thead>
+          <tbody id="lemburTableBody">
+            <tr>
+              <td class="py-2 px-4 border-b">1</td>
+              <td class="py-2 px-4 border-b">fitria utami</td>
+              <td class="py-2 px-4 border-b">01/11/2024</td>
+              <td class="py-2 px-4 border-b">10:35:00 | 23:35:00</td>
+              <td class="py-2 px-4 border-b">kerjaan belom selesai</td>
+              <td class="py-2 px-4 border-b status">Konfirmasi</td>
+            </tr>
+            <!-- Data lainnya dapat ditambahkan di sini -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ubah Status -->
+  <div id="statusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-lg w-96">
+      <h2 class="text-xl font-semibold mb-4">Ubah Status Lembur</h2>
+      <form id="statusForm">
+        <div class="mb-4">
+          <label class="block text-gray-700">Pilih Status Baru</label>
+          <select id="statusSelect" class="w-full border px-3 py-2 rounded">
+            <option value="Konfirmasi">Konfirmasi</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" id="cancelModalBtn" class="text-gray-500 mr-4">Batal</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Menampilkan modal
+    document.getElementById('changeStatusBtn').addEventListener('click', () => {
+      document.getElementById('statusModal').classList.remove('hidden');
+    });
+
+    // Menyembunyikan modal
+    document.getElementById('cancelModalBtn').addEventListener('click', () => {
+      document.getElementById('statusModal').classList.add('hidden');
+    });
+
+    // Fungsi untuk mengubah status
+    document.getElementById('statusForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const newStatus = document.getElementById('statusSelect').value;
+
+      // Memperbarui status pada semua baris
+      document.querySelectorAll('#lemburTableBody .status').forEach((statusCell) => {
+        statusCell.innerText = newStatus;
+      });
+
+      // Menyembunyikan modal setelah disimpan
+      document.getElementById('statusModal').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
